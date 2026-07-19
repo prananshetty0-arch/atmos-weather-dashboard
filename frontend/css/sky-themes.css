@@ -1,0 +1,41 @@
+/* ==========================================================================
+   The signature element: a fixed full-viewport sky behind the glass UI.
+   #sky-gradient carries a slow-transitioning gradient per condition;
+   #sky-canvas (drawn by js/skyEffects.js) layers particles on top —
+   rain, snow, drifting clouds, stars, lightning, fog.
+   ========================================================================== */
+
+#sky-gradient,
+#sky-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+}
+
+#sky-canvas {
+  z-index: -1;
+}
+
+#sky-gradient {
+  background: var(--sky-a, #16213e);
+  background-image: radial-gradient(120% 90% at 15% -10%, var(--sky-a, #1c2b4a), transparent 60%),
+    radial-gradient(140% 100% at 100% 0%, var(--sky-b, #0b1120), transparent 55%),
+    linear-gradient(180deg, var(--sky-c, #0b1120), var(--sky-d, #070b14));
+  transition: background-color var(--duration-slow) var(--ease-out);
+}
+
+/* Condition → palette. Kept in CSS custom properties so JS only ever
+   toggles a class name; no inline style churn. */
+body.cond-clear-day #sky-gradient { --sky-a: #ffd08a; --sky-b: #4fb8d9; --sky-c: #2f7fb0; --sky-d: #123a5e; }
+body.cond-clear-night #sky-gradient { --sky-a: #1b2a4d; --sky-b: #0e1730; --sky-c: #0b1120; --sky-d: #050810; }
+body.cond-clouds #sky-gradient { --sky-a: #5b6d8c; --sky-b: #3c4c6b; --sky-c: #26324a; --sky-d: #131b2c; }
+body.cond-rain #sky-gradient { --sky-a: #3a4a63; --sky-b: #2a3648; --sky-c: #1a2334; --sky-d: #0c1119; }
+body.cond-thunderstorm #sky-gradient { --sky-a: #3a3153; --sky-b: #241d3a; --sky-c: #171029; --sky-d: #0a0714; }
+body.cond-snow #sky-gradient { --sky-a: #a9bdd6; --sky-b: #7488a8; --sky-c: #4b5f80; --sky-d: #232f42; }
+body.cond-mist #sky-gradient { --sky-a: #8a97a8; --sky-b: #66738a; --sky-c: #45516a; --sky-d: #232a3a; }
+
+/* Light theme: sky still shows through, but glass chrome lightens via
+   variables.css — no separate rules needed here. */

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atmos — Weather Dashboard</title>
+  <meta name="description" content="Atmos: a live weather dashboard with forecasts, air quality, an interactive map, favorites and search history." />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/sky-themes.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body class="cond-clear-day">
+
+  <!-- Animated sky sits behind everything, fixed to the viewport -->
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+  <div id="sky-gradient" aria-hidden="true"></div>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <circle cx="16" cy="16" r="6.5" stroke="currentColor" stroke-width="1.6" />
+          <path d="M16 2v4M16 26v4M30 16h-4M6 16H2M25.6 6.4l-2.8 2.8M9.2 22.8l-2.8 2.8M25.6 25.6l-2.8-2.8M9.2 9.2 6.4 6.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Atmos</span>
+      </div>
+
+      <form class="search-form" id="search-form" role="search">
+        <label class="visually-hidden" for="city-input">Search for a city</label>
+        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+          <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="city-input" name="city" placeholder="Search a city…" autocomplete="off" maxlength="100" />
+        <button type="button" id="locate-btn" class="icon-btn" title="Use my location" aria-label="Use my current location">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+      </form>
+
+      <div class="header-right">
+        <div class="live-clock" id="live-clock">
+          <span id="clock-time" class="mono">--:--:--</span>
+          <span id="clock-date" class="clock-date">—</span>
+        </div>
+        <button id="unit-toggle" class="pill-toggle" type="button" title="Switch units" aria-label="Switch temperature units">°C</button>
+        <button id="theme-toggle" class="icon-btn" type="button" title="Toggle dark / light mode" aria-label="Toggle dark or light mode">
+          <svg id="theme-icon" width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36A5.5 5.5 0 0 1 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ================= HERO / PRIMARY CONDITIONS PANEL ================= -->
+    <section class="hero" aria-label="Current conditions">
+      <div class="container">
+        <div class="glass hero-panel" id="hero-panel">
+
+         <div class="hero-skeleton" id="hero-skeleton" hidden>
+            <div class="skel skel-title"></div>
+            <div class="skel skel-temp"></div>
+            <div class="skel skel-line"></div>
+          </div>
+
+          <div class="hero-content" id="hero-content" hidden>
+            <div class="hero-top">
+              <div class="hero-location">
+                <h1 id="city-name">—</h1>
+                <div class="hero-meta">
+                  <span id="country-flag" class="flag" aria-hidden="true"></span>
+                  <span id="country-name" class="mono"></span>
+                  <span class="dot">·</span>
+                  <span id="today-date"></span>
+                </div>
+              </div>
+              <button id="favorite-btn" class="favorite-btn" type="button" aria-pressed="false" title="Add to favorites">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 17.3 5.8 21l1.6-7.1L2 9.2l7.3-.6L12 2l2.7 6.6 7.3.6-5.4 4.7L18.2 21 12 17.3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="hero-main">
+              <div class="hero-icon" id="hero-icon" aria-hidden="true"></div>
+              <div class="hero-temp-block">
+                <span class="hero-temp" id="hero-temp">--°</span>
+                <div class="hero-desc-block">
+                  <p class="hero-desc" id="hero-desc">—</p>
+                  <p class="hero-feels" id="hero-feels">Feels like --°</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-strip">
+              <div class="hero-strip-item">
+                <span class="eyebrow">High / Low</span>
+                <span class="mono" id="hero-hilo">--° / --°</span>
+              </div>
+              <div class="hero-strip-item">
+                <span class="eyebrow">Sunrise</span>
+                <span class="mono" id="hero-sunrise">--:--</span>
+              </div>
+              <div class="hero-strip-item">
+                <span class="eyebrow">Sunset</span>
+                <span class="mono" id="hero-sunset">--:--</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-empty" id="hero-empty">
+            <p class="eyebrow">No location yet</p>
+            <p>Search for a city or use your current location to begin.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= METRICS GRID ================= -->
+    <section class="metrics" aria-label="Detailed readings">
+      <div class="container">
+        <div class="metrics-grid" id="metrics-grid">
+
+          <article class="glass metric-card" data-metric="humidity">
+            <span class="eyebrow">Humidity</span>
+            <div class="metric-dial" id="dial-humidity"><span class="metric-dial-value mono" id="val-humidity">--%</span></div>
+          </article>
+
+          <article class="glass metric-card" data-metric="wind">
+            <span class="eyebrow">Wind</span>
+            <div class="compass" id="compass-wind">
+              <div class="compass-needle" id="compass-needle"></div>
+              <span class="compass-n">N</span>
+            </div>
+            <span class="metric-sub mono" id="val-wind">-- m/s</span>
+          </article>
+
+          <article class="glass metric-card" data-metric="pressure">
+            <span class="eyebrow">Pressure</span>
+            <span class="metric-big mono" id="val-pressure">----</span>
+            <span class="metric-unit">hPa</span>
+          </article>
+
+          <article class="glass metric-card" data-metric="visibility">
+            <span class="eyebrow">Visibility</span>
+            <span class="metric-big mono" id="val-visibility">--</span>
+            <span class="metric-unit">km</span>
+          </article>
+
+          <article class="glass metric-card" data-metric="uv">
+            <span class="eyebrow">UV Index</span>
+            <span class="metric-big mono" id="val-uv">--</span>
+            <span class="metric-badge" id="badge-uv">—</span>
+          </article>
+
+          <article class="glass metric-card" data-metric="aqi">
+            <span class="eyebrow">Air Quality</span>
+            <span class="metric-big mono" id="val-aqi">--</span>
+            <span class="metric-badge" id="badge-aqi">—</span>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FORECAST ================= -->
+    <section class="forecast" aria-label="5-day forecast">
+      <div class="container">
+        <h2 class="section-title">5-Day Forecast</h2>
+        <div class="forecast-strip" id="forecast-strip">
+          <!-- forecast cards injected by JS; skeletons shown while loading -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MAP + SIDE PANELS ================= -->
+    <section class="lower-grid" aria-label="Map, favorites and history">
+      <div class="container lower-grid-inner">
+
+        <div class="glass map-panel">
+          <h2 class="section-title">Weather Map</h2>
+          <div id="map" role="application" aria-label="Interactive weather map"></div>
+        </div>
+
+        <div class="glass side-panel">
+          <div class="tabs" role="tablist" aria-label="Saved places">
+            <button class="tab is-active" role="tab" aria-selected="true" id="tab-favorites" data-panel="panel-favorites">Favorites</button>
+            <button class="tab" role="tab" aria-selected="false" id="tab-history" data-panel="panel-history">History</button>
+          </div>
+
+          <div class="tab-panel" id="panel-favorites" role="tabpanel" aria-labelledby="tab-favorites">
+            <ul class="entry-list" id="favorites-list">
+              <li class="empty-state">No favorites yet — star a city to save it here.</li>
+            </ul>
+          </div>
+
+          <div class="tab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history" hidden>
+            <div class="panel-actions">
+              <button class="text-btn" id="clear-history-btn" type="button">Clear all</button>
+            </div>
+            <ul class="entry-list" id="history-list">
+              <li class="empty-state">Your recent searches will appear here.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p></p>
+        <p class="mono">Atmos © <span id="footer-year"></span></p>
+      </div>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

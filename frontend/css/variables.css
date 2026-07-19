@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Design tokens
+   A meteorological-instrument aesthetic: deep "night sky" chrome that
+   stays constant, with a live sky layer behind it that shifts palette
+   per condition. Three accents only — amber (sun), cyan (clear/cool),
+   violet (storm) — so the UI never fights the dynamic background.
+   ========================================================================== */
+
+:root {
+  /* --- Core palette -------------------------------------------------- */
+  --ink-900: #070b14;
+  --ink-800: #0b1120;
+  --ink-700: #121b2e;
+  --ink-600: #1a2740;
+  --cloud-100: #f4f7fb;
+  --cloud-200: #eaf0f7;
+  --slate-400: #8fa1bd;
+  --slate-500: #6c7d9a;
+
+  --amber: #f2a65a;
+  --amber-soft: #f7c895;
+  --cyan: #4fd1e8;
+  --cyan-soft: #9be8f2;
+  --violet: #8c7cf0;
+  --violet-soft: #b6acf7;
+  --rose: #f2789f;
+  --green: #59d9a3;
+
+  /* --- Semantic tokens (dark = default) -------------------------------- */
+  --bg: var(--ink-800);
+  --bg-deep: var(--ink-900);
+  --text-primary: var(--cloud-200);
+  --text-secondary: var(--slate-400);
+  --text-tertiary: var(--slate-500);
+  --accent: var(--cyan);
+  --accent-2: var(--amber);
+  --danger: var(--rose);
+  --success: var(--green);
+
+  --glass-bg: rgba(234, 240, 247, 0.06);
+  --glass-bg-strong: rgba(234, 240, 247, 0.1);
+  --glass-border: rgba(234, 240, 247, 0.14);
+  --glass-highlight: rgba(255, 255, 255, 0.28);
+  --shadow-color: rgba(4, 8, 16, 0.45);
+
+  --skeleton-base: rgba(234, 240, 247, 0.08);
+  --skeleton-shine: rgba(234, 240, 247, 0.18);
+
+  /* --- Type ------------------------------------------------------------ */
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", monospace;
+
+  /* --- Scale ------------------------------------------------------------ */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 160ms;
+  --duration-base: 320ms;
+  --duration-slow: 700ms;
+
+  --header-height: 76px;
+  --max-width: 1280px;
+}
+
+/* --- Light theme override (toggled via [data-theme="light"] on <html>) - */
+:root[data-theme="light"] {
+  --bg: #eef2f8;
+  --bg-deep: #dfe7f2;
+  --text-primary: #16233a;
+  --text-secondary: #47597a;
+  --text-tertiary: #6c7d9a;
+
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(22, 35, 58, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.9);
+  --shadow-color: rgba(22, 35, 58, 0.18);
+
+  --skeleton-base: rgba(22, 35, 58, 0.08);
+  --skeleton-shine: rgba(22, 35, 58, 0.16);
+}
+
+/* --- Condition accents: applied as a class on <body> by skyEffects.js -- */
+body.cond-clear-day { --accent: var(--amber); --accent-2: var(--cyan); }
+body.cond-clear-night { --accent: var(--cyan); --accent-2: var(--violet); }
+body.cond-clouds { --accent: var(--cyan-soft); --accent-2: var(--slate-400); }
+body.cond-rain { --accent: var(--cyan); --accent-2: var(--violet); }
+body.cond-thunderstorm { --accent: var(--violet); --accent-2: var(--amber); }
+body.cond-snow { --accent: var(--cloud-200); --accent-2: var(--cyan); }
+body.cond-mist { --accent: var(--slate-400); --accent-2: var(--cyan-soft); }
