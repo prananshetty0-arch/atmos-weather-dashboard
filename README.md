@@ -1,210 +1,308 @@
-# Atmos — Weather Dashboard
+# 🌦️ Atmos — Full Stack Weather Dashboard
 
-A full-stack weather dashboard with live conditions, a 5-day forecast, air
-quality and UV data, an interactive map, and MongoDB-backed favorites and
-search history — wrapped in a glassmorphism UI with a canvas-animated sky
-that shifts with the weather.
+A modern **Full Stack Weather Dashboard** built with **HTML5, CSS3, JavaScript, Node.js, Express.js, MongoDB, and OpenWeather API**.
 
-> Built with HTML5, modern CSS, and vanilla JavaScript on the frontend;
-> Node.js, Express, and MongoDB on the backend; data from the OpenWeather API.
+The application provides **real-time weather information**, **5-day forecasts**, **Air Quality Index (AQI)**, **UV Index**, **interactive maps**, **favorites**, **search history**, and a beautiful **glassmorphism user interface** with animated weather effects.
 
 ---
 
-## ✨ Features
+## 🚀 Live Demo
 
-**Weather data**
-- Current conditions by city search or GPS location
-- 5-day forecast (min/max, condition, chance of precipitation)
-- Air Quality Index with pollutant breakdown
-- UV Index (when your OpenWeather key has One Call 3.0 enabled)
-- Feels-like temperature, humidity, pressure, visibility, wind speed & direction, cloudiness
-- Sunrise & sunset times, computed day/night state
-- Country flag, local date
-
-**Interactive map**
-- Leaflet map centered on the searched city
-- Marker + popup for the active location
-- Live precipitation overlay from OpenWeather's tile layer
-
-**Personalization**
-- Favorites and search history persisted in MongoDB
-- °C / °F toggle
-- Dark / light mode, saved across sessions
-- Live clock
-
-**Interface**
-- Glassmorphism panels over a canvas sky that animates rain, snow,
-  drifting clouds, stars, fog, and lightning depending on conditions
-- Skeleton loading states, toast notifications, smooth transitions
-- Fully responsive, keyboard-accessible, respects `prefers-reduced-motion`
+> Coming Soon
 
 ---
 
-## 🗂 Folder structure
+## 📂 GitHub Repository
+
+https://github.com/prananshetty0-arch/atmos-weather-dashboard
+
+---
+
+# 📸 Project Screenshots
+
+## 🏠 Home Dashboard
+
+![Home Dashboard](frontend/assets/screenshots/home.png)
+
+---
+
+## 📅 5-Day Forecast
+
+![Forecast](frontend/assets/screenshots/forecast.png)
+
+---
+
+## 🗺️ Interactive Map
+
+![Interactive Map](frontend/assets/screenshots/map.png)
+
+---
+
+## 🌙 Dark Mode
+
+![Dark Mode](frontend/assets/screenshots/dark-mode.png)
+
+---
+
+# ✨ Features
+
+## 🌦️ Weather Information
+
+- Current weather by city search
+- Current weather using GPS location
+- 5-Day weather forecast
+- Feels Like temperature
+- Humidity
+- Pressure
+- Visibility
+- Wind Speed & Direction
+- Cloud Percentage
+- Sunrise & Sunset
+- Country Flag
+- Local Date & Time
+
+---
+
+## 🌍 Air Quality & UV
+
+- Air Quality Index (AQI)
+- Pollutant Breakdown
+- UV Index
+- Weather Condition Icons
+
+---
+
+## 🗺️ Interactive Map
+
+- Built with Leaflet.js
+- Automatic city marker
+- Weather popup
+- Live precipitation overlay
+
+---
+
+## ❤️ Personalization
+
+- Add favorite cities
+- Search history
+- MongoDB storage
+- Dark / Light Mode
+- Celsius / Fahrenheit switch
+- Live Digital Clock
+
+---
+
+## 🎨 Modern UI
+
+- Glassmorphism Design
+- Animated Sky
+- Rain Animation
+- Snow Animation
+- Clouds
+- Fog
+- Lightning
+- Stars at Night
+- Smooth Transitions
+- Responsive Design
+- Keyboard Accessible
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+- HTML5
+- CSS3
+- JavaScript (ES6)
+- Canvas API
+- Leaflet.js
+
+## Backend
+
+- Node.js
+- Express.js
+
+## Database
+
+- MongoDB
+- Mongoose
+
+## APIs
+
+- OpenWeather API
+
+---
+
+# 📁 Project Structure
 
 ```
 weather-dashboard/
+│
 ├── backend/
 │   ├── config/
-│   │   └── db.js                  # MongoDB connection
+│   │   └── db.js
+│   │
 │   ├── controllers/
-│   │   ├── weatherController.js   # current weather, forecast, AQI, UV
-│   │   ├── historyController.js   # search history CRUD
-│   │   └── favoriteController.js  # favorites CRUD
+│   │   ├── weatherController.js
+│   │   ├── favoriteController.js
+│   │   └── historyController.js
+│   │
 │   ├── middleware/
-│   │   ├── errorHandler.js        # centralized error + 404 handling
-│   │   ├── rateLimiter.js         # per-IP request throttling
-│   │   └── validators.js          # express-validator request schemas
+│   │   ├── errorHandler.js
+│   │   ├── rateLimiter.js
+│   │   └── validators.js
+│   │
 │   ├── models/
-│   │   ├── Search.js
-│   │   └── Favorite.js
+│   │   ├── Favorite.js
+│   │   └── Search.js
+│   │
 │   ├── routes/
 │   │   ├── weatherRoutes.js
-│   │   ├── historyRoutes.js
-│   │   └── favoriteRoutes.js
+│   │   ├── favoriteRoutes.js
+│   │   └── historyRoutes.js
+│   │
 │   ├── utils/
-│   │   ├── asyncHandler.js        # wraps async routes for error handling
-│   │   ├── ApiError.js            # typed HTTP error
-│   │   ├── formatTime.js          # sunrise/sunset + day/night helpers
-│   │   └── openWeatherClient.js   # OpenWeather API wrapper
-│   ├── .env.example
 │   ├── package.json
-│   └── server.js                  # app entry point
+│   ├── server.js
+│   └── .env.example
+│
 ├── frontend/
-│   ├── css/                       # variables, reset, layout, components, animations, themes, responsive
-│   ├── js/                        # ES modules: api, dom, icons, map, skyEffects, clock, toast, utils, main
 │   ├── assets/
-│   │   └── favicon.svg
+│   │   ├── favicon.svg
+│   │   └── screenshots/
+│   │       ├── home.png
+│   │       ├── forecast.png
+│   │       ├── map.png
+│   │       └── dark-mode.png
+│   │
+│   ├── css/
+│   ├── js/
 │   └── index.html
+│
 ├── .gitignore
-└── README.md
+├── README.md
+└── package-lock.json
 ```
 
 ---
 
-## 🚀 Getting started
+# ⚙️ Installation
 
-### 1. Prerequisites
-- [Node.js](https://nodejs.org/) 18 or later
-- [MongoDB](https://www.mongodb.com/try/download/community) running locally, or a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
-- A free [OpenWeather API key](https://openweathermap.org/api)
+## 1️⃣ Clone the Repository
 
-### 2. Configure environment variables
 ```bash
-cd backend
-cp .env.example .env
+git clone https://github.com/prananshetty0-arch/atmos-weather-dashboard.git
 ```
-Then open `.env` and fill in:
 
-| Variable          | Description                                                        |
-|-------------------|---------------------------------------------------------------------|
-| `WEATHER_API_KEY` | Your OpenWeatherMap API key                                        |
-| `MONGO_URI`       | Local (`mongodb://127.0.0.1:27017/atmos`) or Atlas connection string |
-| `PORT`            | Port the server runs on (defaults to `5000`)                       |
-| `CLIENT_ORIGIN`   | Allowed CORS origin in production (not needed in local dev)        |
+---
 
-> **UV Index note:** the current-weather, forecast, and air-quality
-> endpoints work with any free OpenWeather key. UV Index uses the One Call
-> 3.0 endpoint, which requires a separate (still free) subscription
-> opt-in on your OpenWeather account. Without it, the dashboard shows
-> "N/A" for UV instead of failing.
+## 2️⃣ Navigate to Backend
 
-### 3. Install & run
 ```bash
 cd backend
+```
+
+---
+
+## 3️⃣ Install Dependencies
+
+```bash
 npm install
+```
+
+---
+
+## 4️⃣ Configure Environment Variables
+
+Create a `.env` file inside the **backend** folder.
+
+Example:
+
+```env
+WEATHER_API_KEY=YOUR_API_KEY
+MONGO_URI=mongodb://127.0.0.1:27017/atmos
+PORT=5000
+CLIENT_ORIGIN=http://localhost:5000
+```
+
+---
+
+## 5️⃣ Start the Server
+
+```bash
 npm run dev
 ```
-The backend also serves the frontend as static files, so once it's
-running, open:
+
+Open your browser:
 
 ```
 http://localhost:5000
 ```
 
-### 4. MongoDB setup
-- **Local:** install MongoDB Community Server and make sure `mongod` is
-  running before you start the backend.
-- **Atlas:** create a free cluster, add your IP to the network access
-  list, create a database user, and paste the provided connection
-  string into `MONGO_URI` (with your password filled in).
+---
 
-The app will create the `atmos` database and its `searches` /
-`favorites` collections automatically on first use — no manual setup
-required.
+# 📡 API Endpoints
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/weather` | Current Weather |
+| GET | `/api/forecast` | 5-Day Forecast |
+| GET | `/api/airquality` | Air Quality Index |
+| GET | `/api/uv` | UV Index |
+| GET | `/api/history` | Search History |
+| DELETE | `/api/history/:id` | Delete Search |
+| DELETE | `/api/history` | Clear History |
+| GET | `/api/favorites` | Get Favorites |
+| POST | `/api/favorites` | Add Favorite |
+| DELETE | `/api/favorites/:id` | Delete Favorite |
 
 ---
 
-## 🔌 API reference
+# 🔒 Security Features
 
-All endpoints are mounted under `/api` and return `{ success, data }` on
-success or `{ success: false, message }` on error.
-
-| Method | Endpoint              | Description                              |
-|--------|------------------------|-------------------------------------------|
-| GET    | `/api/weather`         | `?city=` or `?lat=&lon=` — current weather |
-| GET    | `/api/forecast`        | `?lat=&lon=` — 5-day forecast              |
-| GET    | `/api/airquality`      | `?lat=&lon=` — air quality index           |
-| GET    | `/api/uv`               | `?lat=&lon=` — UV index (may return `null`)|
-| GET    | `/api/config`           | Public map tile key                       |
-| GET    | `/api/history`          | Last 20 searches                          |
-| DELETE | `/api/history/:id`      | Remove one history entry                  |
-| DELETE | `/api/history`          | Clear all history                         |
-| GET    | `/api/favorites`        | List favorites                            |
-| POST   | `/api/favorites`        | Add a favorite `{ city, country, lat, lon }` |
-| DELETE | `/api/favorites/:id`    | Remove a favorite                         |
+- Environment Variables
+- Helmet.js
+- CORS Protection
+- Rate Limiting
+- Request Validation
+- MongoDB Injection Protection
+- Centralized Error Handling
 
 ---
 
-## 🔒 Security
+# 🚀 Future Improvements
 
-- Environment variables for all secrets (never hardcoded)
-- [Helmet](https://helmetjs.github.io/) with a locked-down Content Security Policy
-- CORS configured explicitly
-- Per-IP rate limiting on all `/api` routes
-- Request validation via `express-validator` on every route that accepts input
-- MongoDB query sanitization against NoSQL injection
-- Centralized error handling — no stack traces leaked in production
-
----
-
-## 🛠 Tech stack
-
-| Layer     | Technology                                          |
-|-----------|------------------------------------------------------|
-| Frontend  | HTML5, modern CSS (glassmorphism, Canvas 2D), vanilla JS (ES modules) |
-| Mapping   | [Leaflet](https://leafletjs.com/)                    |
-| Backend   | Node.js, Express.js                                  |
-| Database  | MongoDB with Mongoose                                |
-| Weather   | [OpenWeather API](https://openweathermap.org/api)    |
+- Hourly Forecast
+- Weather Alerts
+- User Authentication
+- PWA Support
+- Offline Mode
+- Multi-City Comparison
+- Automated Testing
+- Docker Support
 
 ---
 
-## 📸 Screenshots
+# 👨‍💻 Author
 
-_Add screenshots of the dashboard here once deployed — e.g. hero panel,
-metrics grid, forecast strip, and map view._
+**Pranan Shetty**
 
-```
-docs/
-├── screenshot-hero.png
-├── screenshot-metrics.png
-└── screenshot-map.png
-```
+B.Sc. Information Technology Student
 
----
+Aspiring Full Stack Developer
 
-## 🧭 Future improvements
-
-- Hourly forecast view alongside the 5-day outlook
-- Multi-city comparison view
-- PWA support for offline access to the last-viewed city
-- User accounts so favorites/history sync across devices
-- Severe weather alerts (One Call API `alerts` field)
-- Automated tests (Jest + Supertest for the API, Playwright for the UI)
+GitHub:
+https://github.com/prananshetty0-arch
 
 ---
 
-## 📄 License
+# 📄 License
 
-MIT — free to use for learning, portfolio, or interview purposes.
+This project is licensed under the **MIT License**.
+
+Feel free to use this project for learning, educational purposes, and portfolio development.
+
+---
+
+⭐ If you like this project, consider giving it a **Star** on GitHub.
