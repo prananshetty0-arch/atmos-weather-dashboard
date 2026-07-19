@@ -40,7 +40,7 @@ https://github.com/prananshetty0-arch/atmos-weather-dashboard
 
 ## 🌙 Dark Mode
 
-![Dark Mode](frontend/assets/screenshots/dark-mode.png)
+![Light Mode](frontend/assets/screenshots/Light-mode.png)
 
 ---
 
