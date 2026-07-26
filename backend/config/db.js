@@ -14,10 +14,12 @@ async function connectDB() {
 
   mongoose.set("strictQuery", true);
 
-  await mongoose.connect(uri);
+  await mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 10000,
+  });
 
   mongoose.connection.on("disconnected", () => {
-    console.warn("⚠️  MongoDB disconnected");
+    console.warn("⚠️ MongoDB disconnected");
   });
 
   mongoose.connection.on("error", (err) => {
