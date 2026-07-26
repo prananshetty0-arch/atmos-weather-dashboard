@@ -1,0 +1,254 @@
+/* ==========================================================================
+   Full-page map — a real map app: the map fills the viewport, everything
+   else (search, layers, info) floats above it in glass panels.
+   ========================================================================== */
+
+html.map-html,
+html.map-html body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+
+body.map-body {
+  position: relative;
+}
+
+#full-map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--bg-deep);
+}
+
+/* Leaflet's own chrome, nudged to sit comfortably with our floating panels
+   and to not clash visually with the glass aesthetic. */
+.leaflet-control-zoom,
+.leaflet-control-attribution {
+  filter: var(--leaflet-chrome-filter, none);
+}
+:root[data-theme="dark"] {
+  --leaflet-chrome-filter: invert(1) hue-rotate(180deg);
+}
+.leaflet-top.leaflet-right { top: 84px; }
+
+/* ---------------------------- Top bar ----------------------------------- */
+.map-topbar {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  right: var(--space-4);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+
+.map-back-btn {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  transition: color var(--duration-fast), background var(--duration-fast);
+}
+.map-back-btn:hover {
+  color: var(--accent);
+  background: var(--glass-bg-strong);
+}
+
+.map-topbar .search-wrap {
+  flex: 1;
+  max-width: 480px;
+  margin-inline: 0;
+}
+.map-topbar .search-form {
+  max-width: none;
+  background: transparent;
+  border: none;
+  padding: 0.3rem 0.3rem 0.3rem 0.3rem;
+}
+
+.map-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ---------------------------- Layer switcher ----------------------------- */
+.map-layers-panel {
+  position: absolute;
+  top: 84px;
+  left: var(--space-4);
+  z-index: 15;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 180px;
+}
+.map-layers-title {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding: 0.4rem 0.6rem 0.2rem;
+}
+.map-layer-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-align: left;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+.map-layer-btn:hover {
+  background: var(--glass-bg-strong);
+  color: var(--text-primary);
+}
+.map-layer-btn.is-active {
+  background: var(--glass-bg-strong);
+  color: var(--accent);
+}
+.map-layer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* ---------------------------- Floating action buttons -------------------- */
+.map-fab-stack {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-5);
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.map-fab {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  box-shadow: 0 12px 30px -12px var(--shadow-color);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  transition: color var(--duration-fast), transform var(--duration-fast);
+}
+.map-fab:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+.map-fab.locating svg {
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------------------------- Weather info card --------------------------- */
+.map-info-card {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-5);
+  z-index: 18;
+  width: min(340px, calc(100vw - 2 * var(--space-4)));
+  padding: var(--space-5);
+  transform: translateY(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--duration-base) var(--ease-out), opacity var(--duration-base);
+}
+.map-info-card.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.map-info-close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  color: var(--text-tertiary);
+}
+.map-info-close:hover { color: var(--danger); }
+
+.map-info-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-right: var(--space-6);
+}
+.map-info-city {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.map-info-country {
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+}
+.map-info-time {
+  margin-top: var(--space-1);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+.map-info-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+.map-info-icon { width: 52px; height: 52px; flex-shrink: 0; }
+.map-info-temp {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.map-info-desc {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+.map-info-stats {
+  display: flex;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--glass-border);
+}
+.map-info-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.map-info-stat .eyebrow { font-size: 0.62rem; }
+.map-info-stat .mono { font-size: 0.86rem; color: var(--text-primary); }
+.map-info-loading {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+  padding: var(--space-2) 0;
+}
+
+/* ---------------------------- Responsive --------------------------------- */
+@media (max-width: 720px) {
+  .map-topbar { flex-wrap: wrap; }
+  .map-layers-panel { width: 150px; top: auto; bottom: 190px; left: var(--space-3); }
+  .map-info-card { left: var(--space-3); right: var(--space-3); width: auto; bottom: var(--space-4); }
+  .map-fab-stack { right: var(--space-3); bottom: var(--space-4); }
+}
