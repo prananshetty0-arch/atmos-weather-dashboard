@@ -8,9 +8,7 @@ The application provides real-time weather updates, interactive weather maps, ai
 
 ## 🚀 Live Demo
 
-🌐 **Coming Soon**
-
-> The application will be deployed on Render.
+https://atmos-weather-backend.onrender.com
 
 ---
 
